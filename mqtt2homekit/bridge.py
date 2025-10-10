@@ -20,7 +20,6 @@ ONE_MINUTE = 60
 ONE_HOUR = ONE_MINUTE * 60
 ONE_DAY = ONE_HOUR * 24
 
-
 def build_driver(bridge, port, persist_file):
     driver = AccessoryDriver(
         port=port,
@@ -36,6 +35,8 @@ class MQTTBridge(Bridge):
     def __init__(self, display_name, **kwargs):
         self.persist_file = kwargs.pop('persist_file')
         self.mqtt_server = urlparse(kwargs.pop('mqtt_server'))
+        self.mqtt_username = kwargs.pop('username', None)
+        self.mqtt_password = kwargs.pop('password', None)
         self.port = random.randint(50000, 60000)
         self.prefix = kwargs.pop('prefix', 'HomeKit')
         driver = build_driver(self, self.port, self.persist_file)
@@ -131,12 +132,19 @@ class MQTTBridge(Bridge):
         self.accessories.pop(aid)
         self.config_changed()
 
+    def on_connect(self, client, userdata, flags, reason_code, properties):
+        client.subscribe('{}/#'.format(self.prefix),1)
+
     async def run(self):
         """
         Create, and start, a driver for this accessory.
         """
-        self.client = mqtt.Client()
-        self.client.on_connect = lambda client, userdata, flags, rc: client.subscribe('{}/#'.format(self.prefix), 1)
+        self.client = mqtt.Client(callback_api_version=mqtt.CallbackAPIVersion.VERSION2)
+
+        if self.mqtt_username is not None:
+            self.client.username_pw_set(username=self.mqtt_username, password=self.mqtt_password)
+
+        self.client.on_connect = self.on_connect
         self.client.message_callback_add('{}/+/+/+'.format(self.prefix), self.handle_mqtt_message)
         self.client.message_callback_add('{}/+/+/+/+'.format(self.prefix), self.handle_mqtt_message)
         try:
@@ -149,7 +157,8 @@ class MQTTBridge(Bridge):
 
     async def stop(self):
         await super().stop()
-        self.client.loop_stop(force=True)
+        self.client.disconnect()
+        self.client.loop_stop()
         # Make sure we write our current data.
         self.driver.persist()
 

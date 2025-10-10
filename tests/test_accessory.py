@@ -24,8 +24,6 @@ def test_clean_value_Brightness():
 
 
 def test_Accesssory_new_char(mocker):
-    mocker.patch('pyhap.hap_server.HAPServer.server_close')
-    mocker.patch('pyhap.hap_server.HAPServer.server_bind')
     mocker.patch('pyhap.accessory_driver.AccessoryDriver.config_changed')
     acc = Accessory(
         display_name='Lightbulb One',
@@ -38,8 +36,6 @@ def test_Accesssory_new_char(mocker):
 
 
 def test_Accessory_no_response(mocker):
-    mocker.patch('pyhap.hap_server.HAPServer.server_close')
-    mocker.patch('pyhap.hap_server.HAPServer.server_bind')
     mocker.patch('pyhap.accessory_driver.AccessoryDriver.config_changed')
     acc = Accessory(
         display_name='Lightbulb One',

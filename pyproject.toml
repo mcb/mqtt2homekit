@@ -1,0 +1,45 @@
+[project]
+name = "mqtt2homekit"
+version = "0.2.0"
+license = "Apache-2.0"
+description = "Transparently bridge an MQTT topic tree to HomeKit."
+readme = "README.rst"
+authors = [{ name = "Matthew Schinckel" },{name = "Michael Beck"}]
+requires-python = ">=3.12"
+dependencies = [
+    "HAP-python[QRCode]>=5.0.0",
+    "paho-mqtt>=2.1.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.4.2",
+    "pytest-mock>=3.15.1",
+    "ruff>=0.14.0",
+    "mypy>=1.18.2",
+    "coverage>=7.10.7"
+]
+
+[tool.ruff.lint]
+select = [
+    # pycodestyle
+    "E",
+    # Pyflakes
+    "F",
+    # pyupgrade
+    "UP",
+    # flake8-bugbear
+    "B",
+    # flake8-simplify
+    "SIM",
+    # isort
+    "I",
+]
+
+[tool.ruff]
+line-length = 100
+
+[tool.ruff.format]
+quote-style = "single"
+indent-style = "tab"
+docstring-code-format = true

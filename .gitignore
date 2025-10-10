@@ -1,6 +1,8 @@
-syntax: glob
-
+*.egg-info
 *.state
 .pytest_cache/*
+__pycache__/
 .coverage
 htmlcov/*
+
+.direnv/*
