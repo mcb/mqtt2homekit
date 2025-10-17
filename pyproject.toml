@@ -22,24 +22,25 @@ dev = [
 
 [tool.ruff.lint]
 select = [
-    # pycodestyle
-    "E",
-    # Pyflakes
-    "F",
-    # pyupgrade
-    "UP",
-    # flake8-bugbear
-    "B",
-    # flake8-simplify
-    "SIM",
-    # isort
-    "I",
+    "C",        #complexity
+    "E",        #pycodestyle
+    "F",        #Pyflakes
+    "UP",       #pyupgrade
+    "B",        #flake8-bugbear
+    "SIM",      #flake8-simplify
+    "I",        #isort
 ]
 
-[tool.ruff]
-line-length = 100
+ignore = [
+    "E501",     # line too long
+]
 
 [tool.ruff.format]
 quote-style = "single"
 indent-style = "tab"
 docstring-code-format = true
+
+[tool.ruff.lint.isort]
+force-sort-within-sections = true
+combine-as-imports = true
+split-on-trailing-comma = false
